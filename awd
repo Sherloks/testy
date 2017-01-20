@@ -1,0 +1,39 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Created by Charles-Antoine on 2017-01-19.
+ */
+public class Main {
+
+    public static void main(String[] args) {
+        Path path = Paths.get("C:/dev/logs.txt");
+        try {
+            byte[] data = Files.readAllBytes(path);
+
+            String pattern = "(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}) ([^ ]*) +(?:\\[(.*)\\])?((?:(?!\\t|(?:\\d{4}-\\d{2}-\\d{2})).|\\n)*)((?:(?!(?:\\d{4}-\\d{2}-\\d{2})).|\\n)*)";
+            Pattern r = Pattern.compile(pattern);
+
+
+
+            String content = new String(data);
+            Matcher m = r.matcher(content);
+
+            while (m.find()) {
+                System.out.println("Date : " + m.group(1));
+                System.out.println("TYPE : " + m.group(2));
+                System.out.println("Classname : " + m.group(3));
+                System.out.println("Description : " + m.group(4));
+                System.out.println("Stacktrace" + m.group(5));
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
